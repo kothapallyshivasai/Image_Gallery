@@ -131,7 +131,6 @@ def save_profile(request):
         updated_user = request.user
         updated_user.first_name = request.POST.get('firstname')
         updated_user.last_name = request.POST.get('lastname')
-        updated_user.email = request.POST.get('email')
         flag = request.POST.get('password')
         if flag != updated_user.password:
             updated_user.set_password(request.POST.get('password'))
