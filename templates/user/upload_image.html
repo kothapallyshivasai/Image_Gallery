@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Image</title>
+    {% include "includes.html" %}
+    <script>
+        function usernameVisibility() {
+            var user = document.getElementById("user");
+            var flag = document.getElementById("username_visible").checked;
+        
+            if (flag) {
+                user.type = "text";
+            } else {
+                user.type = "password";
+            }
+        }        
+    </script>
+</head>
+<body>
+    {% include "user/navbar.html" %}
+    <h1 class="text-center">Upload Image</h1>
+    <p class="text-center">Summer Collection New Modern Image's</p>
+
+    <form method="post" action="{% url 'validate_upload_image' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-8 col-12 offset-xl-2">
+                    <div class="card">
+                        <div class="card-body border-black">
+                            <div class="mb-3">
+                                <label for="image" class="form-label">Image</label>
+                                <input type="file" class="form-control" id="image" name="image"> 
+                            </div>
+                            <div class="mb-3">
+                                <label for="user" class="form-label">User</label>
+                                <input type="password" class="form-control" id="user" value="{{user.username}}" readonly name="user">
+                            </div>
+                            <div class="mb-3">
+                                <label for="caption" class="form-label">Caption</label>
+                                <input type="text" class="form-control" id="caption" name="caption">
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="visible" name="visible">
+                                <label class="form-check-label" for="visible">Public Visibility</label>
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" onclick="usernameVisibility()" class="form-check-input" id="username_visible" name="username_visible">
+                                <label class="form-check-label" for="username_visible">Username Visibility</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Upload</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <hr>
+    {% include 'footer.html' %} 
+</body>
+</html>

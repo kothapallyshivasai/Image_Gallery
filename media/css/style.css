@@ -1,0 +1,40 @@
+#wand{
+    height: 22px;
+    width: 22px;
+}
+
+.hover-animation{
+    position: relative;
+    overflow: hidden;
+  }
+  
+.hover-animation::after{
+    content: "";
+    display: block;
+    height: 4px;
+    width: 100%;
+    background-color: #2bd576;
+    transform: scale(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+}
+  
+.hover-animation:hover::after{
+    transform: scale(1);
+}
+  
+.navbar{
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.navbar-nav.ml-auto {
+    margin-left: auto;
+}
+
+.navbar-nav.ml-auto .nav-item {
+    margin-right: 15px; 
+}

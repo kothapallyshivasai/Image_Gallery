@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Home</title>
+    {% include "includes.html" %}
+</head>
+<body>
+    {% include "user/navbar.html" %}
+
+    <h1 class="text-center">Featured Images</h1>
+    <p class="text-center">Summer Collection New Modern Image's</p>
+    <div class="container">
+        <div class="card border-black">
+            <div class="card-body">
+                <div class="row">
+                    {% for image in objects %}
+                        {% include "image_component.html" with image=image %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% include "user/pagination.html" %}
+        </div>
+    </div>
+
+    {% include 'footer.html' %} 
+</body> 
+</html>
