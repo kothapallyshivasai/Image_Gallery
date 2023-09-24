@@ -70,26 +70,120 @@ def upload_image(request):
 @login_required
 @never_cache
 def validate_upload_image(request):
-    if request.method == 'POST':
 
-        image_object = Image()
-        image_object.image = request.FILES.get('image')
-        image_object.user = request.user
-        image_object.caption = request.POST.get('caption')
-        image_object.visible = request.POST.get('visible') == "on"
-        image_object.username_visible = request.POST.get('username_visible') == "on"
+    user = request.user
+    if user.is_superuser:
+        return redirect("/admin")
+
+    if request.method == 'POST':
+        image_file = request.FILES.get('image')
+
+        try:
+            image = PILImage.open(image_file)
+            valid_formats = ('JPEG', 'JPG', 'PNG', 'GIF')
+            if image.format not in valid_formats:
+                return redirect("/gallery/upload_image")
+        except Exception as e:
+            return redirect("/gallery/upload_image")
+
+        user = request.user
+        caption = request.POST.get('caption')
+        visible = request.POST.get('visible') == "on"
+        username_visible = request.POST.get('username_visible') == "on"
+
+        image_object = Image(
+            image=image_file,
+            user=user,
+            caption=caption,
+            visible=visible,
+            username_visible=username_visible
+        )
+
         image_object.save()
 
-        return redirect('/gallery/profile/')  
+        return redirect("/gallery/profile")
 
-    return redirect('/gallery/upload/')
+    return redirect('/gallery/upload_image/')
 
 
 
 @login_required
 @never_cache
 def profile(request):
-    return render(request, "user/profile.html", {})
+
+    if request.user.is_superuser: return redirect("/admin")
+    images = Image.objects.filter(user=request.user).order_by('-id')
+    image_count = images.count
+    paginator = Paginator(images, 6)
+    page_number = request.GET.get('page', 1)
+    images = paginator.get_page(page_number)
+    total_pages = images.paginator.num_pages
+    return render(request, "user/profile.html", {'objects': images, 'image_count': image_count, 'totalPageList': [(n + 1) for n in range(total_pages)]})
+
+@login_required
+@never_cache
+def save_profile(request):
+
+    if request.user.is_superuser: return redirect("/admin")
+
+    if request.method == "POST":
+        
+        updated_user = request.user
+        updated_user.first_name = request.POST.get('firstname')
+        updated_user.last_name = request.POST.get('lastname')
+        updated_user.email = request.POST.get('email')
+        flag = request.POST.get('password')
+        if flag != updated_user.password:
+            updated_user.set_password(request.POST.get('password'))
+        try:
+            updated_user.save()
+            return redirect("/gallery/profile")
+        except Exception as e:
+            return redirect("/gallery/profile")
+    
+    return redirect("/gallery/profile")
+
+
+@login_required
+@never_cache
+def update_image(request, id):
+    if request.user.is_superuser: return redirect("/admin")
+
+    if request.method == "POST":
+        
+        try:
+            image = Image.objects.get(pk=id)
+            image.caption = request.POST.get(f"caption{image.id}")
+            image.visible = request.POST.get(f'visible{image.id}') == "on"
+            image.username_visible = request.POST.get(f'username_visible{image.id}') == "on"
+            image.save()
+            return redirect("/gallery/profile")
+        except Exception as e:
+            return redirect("/gallery/profile")
+            
+
+    return redirect("/gallery/profile")
+
+    
+
+
+@login_required
+@never_cache
+def delete_image(request, id):
+    if request.user.is_superuser: return redirect("/admin")
+
+    if request.method == "POST":
+        
+        try:
+            image = Image.objects.get(pk=id)
+            image.image.delete(save=True)
+            image.delete()
+            return redirect("/gallery/profile")
+
+        except Exception as e:
+            return redirect("/gallery/profile")
+
+    return redirect("/gallery/profile")
 
 
 

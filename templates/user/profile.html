@@ -4,8 +4,116 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
+    {% include "includes.html" %}
 </head>
 <body>
-    
+    {% include "user/navbar.html" %}
+    <form action="/gallery/save_profile/" method="post">
+        {% csrf_token %}
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-10 col-12 offset-xl-1">
+                    <div class="card border-dark">
+                        <div class="card-body">
+                            <h2 class="text-center">User Profile</h2>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="mb-4">
+                                    <label for="userid" class="form-label"><img src="/media/register_icons/user_id.png" style="height: 25px; width: 25px;"> User ID</label>
+                                    <input type="number"
+                                        class="form-control" name="userid" id="userid" readonly value="{{user.id}}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="mb-4">
+                                        <label for="role" class="form-label"><img src="/media/register_icons/role.png" style="height: 25px; width: 25px;"> Role</label>
+                                        <input type="text"
+                                        class="form-control" name="role" id="role" value="User">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="mb-4">
+                                    <label for="username" class="form-label"><img src="/media/register_icons/username.png" style="height: 25px; width: 25px;"> Username</label>
+                                    <input type="text"
+                                        class="form-control" name="username" id="username" readonly value="{{user.username}}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="mb-4">
+                                        <label for="password" class="form-label"><img src="/media/register_icons/password2.png" style="height: 25px; width: 25px;"> Password</label>
+                                        <input type="password"
+                                        class="form-control" name="password" id="password" value="{{user.password}}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="mb-4">
+                                    <label for="firstname" class="form-label"><img src="/media/register_icons/first_name.png" style="height: 25px; width: 25px;"> First Name</label>
+                                    <input type="text"
+                                        class="form-control" name="firstname" id="firstname" value="{{user.first_name}}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="mb-4">
+                                        <label for="lastname" class="form-label"><img src="/media/register_icons/last_name.png" style="height: 25px; width: 25px;"> Last Name</label>
+                                        <input type="text"
+                                        class="form-control" name="lastname" id="lastname" value="{{user.last_name}}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="mb-4">
+                                    <label for="email" class="form-label"><img src="/media/register_icons/email.png" style="height: 25px; width: 25px;"> Email</label>
+                                    <input type="email"
+                                        class="form-control" name="email" id="email" value="{{user.email}}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="mb-4">
+                                        <label for="uploadcount" class="form-label"><img src="/media/register_icons/upload.png" style="height: 25px; width: 25px;"> Upload Count</label>
+                                        <input type="number"
+                                        class="form-control" readonly name="uploadcount" id="uploadcount" value="{{image_count}}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="mb-4">
+                                        <label for="datejoined" class="form-label"><img src="/media/register_icons/date_joined.png" style="height: 25px; width: 25px;"> Date Joined</label>
+                                        <input type="datetime"
+                                        class="form-control" name="datejoined" id="datejoined" readonly value="{{user.date_joined}}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="mb-4">
+                                        <label for="lastlogin" class="form-label"><img src="/media/register_icons/last_login.png" style="height: 25px; width: 25px;"> Last Login</label>
+                                        <input type="datetime"
+                                        class="form-control" name="lastlogin" id="lastlogin" readonly value="{{user.last_login}}">
+                                    </div>
+                                </div>
+                                <div class="col-12 text-center">
+                                    <button type="submit" class="btn btn-success">Save Changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <h2 class="text-center mt-5">Your Images</h2>
+    <p class="text-center">Summer Collection New Modern Image's</p>
+    <div class="container">
+        <div class="card border-black">
+            <div class="card-body">
+                <div class="row">
+                    {% for image in objects %}
+                        {% include "user/owner_image.html" with image=image %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% include "user/owner_pagination.html" %}
+        </div>
+    </div>
+    <hr>
+    {% include 'footer.html' %}
 </body>
-</html>
+</html> 
