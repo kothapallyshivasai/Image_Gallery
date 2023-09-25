@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Image
+from .models import Image, Likes
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 from django.contrib import messages
@@ -46,13 +46,17 @@ def user_home(request):
         if not i.username_visible:
             i.username = "Anonymous"
 
+    user_likes = Likes.objects.filter(user=request.user).values_list('image_id', flat=True)
+
+
     paginator = Paginator(images, 16)
     page_number = request.GET.get('page', 1)
     images = paginator.get_page(page_number)
     total_pages = images.paginator.num_pages
     
     return render(request, 'user/index.html', {'objects': images,
-            'totalPageList': [(n + 1) for n in range(total_pages)]})
+            'totalPageList': [(n + 1) for n in range(total_pages)],
+            'user_likes': user_likes})
 
 
 
@@ -163,6 +167,34 @@ def update_image(request, id):
 
     return redirect("/gallery/profile")
 
+@login_required
+@never_cache
+def image_like(request, image_id):
+    if request.user.is_superuser: return redirect("/admin")
+
+    already_liked = Likes.objects.filter(user=request.user, image_id=image_id).exists()
+
+    if not already_liked:
+        likes = Likes()
+        likes.user = request.user
+        likes.image_id = Image.objects.get(pk=image_id)
+        likes.save()
+
+    return redirect("/gallery/user_home")
+
+
+@login_required
+@never_cache
+def remove_like(request, image_id):
+    if request.user.is_superuser: return redirect("/admin")
+
+    try:
+        likes = Likes.objects.get(user=request.user, image_id=image_id)
+        likes.delete()
+    except Exception as e:
+        pass
+
+    return redirect("/gallery/user_home")
     
 
 

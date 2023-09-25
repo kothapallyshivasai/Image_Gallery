@@ -14,3 +14,13 @@ class Image(models.Model):
     
     def __str__(self):
         return self.caption + ", " + self.username()
+    
+    @property
+    def total_likes(self):
+        return Likes.objects.filter(image_id=self.id).count()
+
+
+class Likes(models.Model):
+    id = models.AutoField(primary_key=True)
+    image_id = models.ForeignKey(Image, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)

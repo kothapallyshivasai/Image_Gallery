@@ -4,8 +4,11 @@
         <img src="{{image.image.url}}" class="card-img-top" alt="Image">
         </div>
         <div class="card-body">
-        <h5>{{image.caption}}</h5>
-        <p>Posted By: {{image.username}}</p>
+            <h5>{{image.caption}}</h5>
+            <p>Posted By: {{image.username}}</p>
+            <div class="mb-2">
+                {{ image.total_likes }} Likes
+            </div>    
         </div>
     </div>                          
 </div>

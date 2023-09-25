@@ -16,6 +16,10 @@
                         <input type="checkbox" class="form-check-input" id="visible{{image.id}}" name="visible{{image.id}}" {% if image.visible %}checked{% endif %}>
                         <label class="form-check-label" for="visible{{image.id}}">Public Visibility</label>
                     </div>
+                    <div class="mb-3">
+                        <label for="total_likes" class="form-label">Total Likes</label>
+                        <input type="number" name="total_likes" readonly value="{{image.total_likes}}" id="total_likes" class="form-control">
+                    </div>
                     <div class="mb-3 form-check">
                         <input type="checkbox" class="form-check-input" id="username_visible{{image.id}}" name="username_visible{{image.id}}" {% if image.username_visible %}checked{% endif %}>
                         <label class="form-check-label" for="username_visible{{image.id}}">Username Visibility</label>

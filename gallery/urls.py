@@ -15,5 +15,7 @@ urlpatterns = [
     path('save_profile/', save_profile, name="save_profile"),
     path('delete_image/<int:id>', delete_image, name="delete_image"),
     path('update_image/<int:id>', update_image, name="update_image"),
+    path('image_like/<int:image_id>', image_like, name="image_like"),
+    path('remove_like/<int:image_id>', remove_like, name="remove_like"),
 ]
  
