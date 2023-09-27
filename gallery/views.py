@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Image, Likes
+from .models import Image, Likes, Comments
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 from django.contrib import messages
@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as auth_login
 from django.core.paginator import Paginator
 from PIL import Image as PILImage
+from django.db.models import Count
 
 # Create your views here.
 @never_cache
@@ -23,7 +24,7 @@ def home_page(request):
         pass
 
     else:
-        images = Image.objects.filter(visible = True)[:12]
+        images = Image.objects.annotate(total_likes_count=Count('likes')).filter(visible=True).order_by('-total_likes_count')[:12]
 
         for i in images:
             if not i.username_visible:
@@ -40,7 +41,7 @@ def user_home(request):
     if user.is_superuser:
         return redirect("/admin")
 
-    images = Image.objects.all()
+    images = Image.objects.all().order_by('-id')
 
     for i in images:
         if not i.username_visible:
@@ -196,6 +197,26 @@ def remove_like(request, image_id):
 
     return redirect("/gallery/user_home")
     
+
+@login_required
+@never_cache
+def add_comment(request, image_id):
+    if request.user.is_superuser: return redirect("/admin")
+
+    if request.method == "POST":
+        comment = request.POST.get(f'comment{image_id}')
+        comment_object = Comments()
+        try:
+            comment_object.image_id = Image.objects.get(pk=image_id)
+            comment_object.user = request.user
+            comment_object.comment = comment
+            comment_object.save()
+        except Exception as e:
+            print(e)
+        return redirect("/gallery/user_home")        
+
+    return redirect("/gallery/user_home")
+
 
 
 @login_required

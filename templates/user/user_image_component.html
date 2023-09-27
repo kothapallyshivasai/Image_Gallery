@@ -1,17 +1,17 @@
 <script>
+
     function image_like(imageId) {
         var url = `/gallery/image_like/${imageId}`;
         window.location.href = url;
     }
+
 </script>
-<div class="col-12 col-sm-6 col-md-6 col-lg-3">
+<div class="col-12 col-sm-6">
     <div class="card mt-4 mb-3">
-        <div class="m-2">
+        <div>
             <img src="{{ image.image.url }}" ondblclick="image_like('{{image.id}}')" class="card-img-top" alt="Image">
         </div>
         <div class="card-body">
-            <h5>{{ image.caption }}</h5>
-            <p>Posted by: {{ image.username }}</p>
             {% if image.id in user_likes %}
                 <a href="/gallery/remove_like/{{ image.id }}"><img src="/media/background_images/full_heart.png" style="height: 20px; width: 20px; margin-right: 5px;"></a>
             {% else %}
@@ -20,11 +20,30 @@
             <a href="#"><img src="/media/background_images/comment.png" style="height: 20px; width: 20px; margin-right: 5px;"></a>
             <a href="#"><img src="/media/background_images/share.png" style="height: 20px; width: 20px; margin-right: 5px;"></a>
 
-            <a href="#"><img src="/media/background_images/empty_saved.png" style="height: 20px; width: 20px;"></a>
-            <!-- <a href="#"><img src="/media/background_images/full_saved.png" style="height: 20px; width: 20px; margin-right: 5px;"></a> -->
-            <div class="mb-2">
-                {{ image.total_likes }} Likes
+            <div class="mt-1" id="likesText{{image.id}}">
+                {{ image.total_likes }} likes
             </div>
+            <div class="mb-1">
+                <b>{{ image.username }}</b> {{image.caption}}
+            </div>
+            <div class="text-muted">
+                {{ image.total_comments }} Comments
+            </div>
+
+            <form action="{% url 'add_comment' image.id %}" method="post">
+
+                {% csrf_token %}
+
+                <div class="input-group mt-2">
+                    <input type="text" class="form-control" id="comment{{image.id}}" required name="comment{{image.id}}" placeholder="Add a comment...">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-success" type="submit" style="z-index: 0;">
+                            Post
+                        </button>
+                    </div>
+                </div>
+            
+            </form>
         </div>
     </div>                          
 </div>

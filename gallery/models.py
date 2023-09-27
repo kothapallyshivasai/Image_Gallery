@@ -18,9 +18,19 @@ class Image(models.Model):
     @property
     def total_likes(self):
         return Likes.objects.filter(image_id=self.id).count()
+    
+    @property
+    def total_comments(self):
+        return Comments.objects.filter(image_id=self.id).count()
 
 
 class Likes(models.Model):
     id = models.AutoField(primary_key=True)
+    image_id = models.ForeignKey(Image, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+class Comments(models.Model):
+    id = models.AutoField(primary_key=True)
+    comment = models.TextField()
     image_id = models.ForeignKey(Image, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)

@@ -1,14 +1,30 @@
-<div class="col-12 col-sm-6 col-md-6 col-lg-3">
+<div class="col-12 col-sm-6">
     <div class="card mt-4 mb-3">
-        <div class="m-2">
+        <div>
         <img src="{{image.image.url}}" class="card-img-top" alt="Image">
         </div>
         <div class="card-body">
-            <h5>{{image.caption}}</h5>
-            <p>Posted By: {{image.username}}</p>
-            <div class="mb-2">
-                {{ image.total_likes }} Likes
-            </div>    
+            <a href="{% url 'login' %}"><img src="/media/background_images/empty_heart.png" style="height: 20px; width: 20px; margin-right: 5px;"></a>
+            <a href="{% url 'login' %}"><img src="/media/background_images/comment.png" style="height: 20px; width: 20px; margin-right: 5px;"></a>
+            <a href="{% url 'login' %}"><img src="/media/background_images/share.png" style="height: 20px; width: 20px; margin-right: 5px;"></a>
+
+            <div class="mt-1">
+                {{ image.total_likes }} likes
+            </div>
+            <div class="mb-1">
+                <b>{{ image.username }}</b> {{image.caption}}
+            </div>
+            <div class="text-muted">
+                {{ image.total_comments }} Comments
+            </div>
+            <div class="input-group mt-2">
+                <input type="text" class="form-control" id="comment{{image.id}}" name="comment{{image.id}}" placeholder="Add a comment...">
+                <div class="input-group-append">
+                    <a class="btn btn-outline-success" href="{% url 'login' %}" style="z-index: 0;">
+                        Post
+                    </a>
+                </div>
+            </div>
         </div>
     </div>                          
 </div>

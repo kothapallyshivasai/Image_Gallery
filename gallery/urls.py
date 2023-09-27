@@ -17,5 +17,6 @@ urlpatterns = [
     path('update_image/<int:id>', update_image, name="update_image"),
     path('image_like/<int:image_id>', image_like, name="image_like"),
     path('remove_like/<int:image_id>', remove_like, name="remove_like"),
+    path('add_comment/<int:image_id>', add_comment, name="add_comment"),
 ]
  
