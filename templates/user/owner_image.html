@@ -1,38 +1,48 @@
 <div class="col-12 col-sm-12 col-md-6 col-lg-6">
     <div class="card mt-4 mb-3">
         <div class="m-2">
-        <img src="{{image.image.url}}" class="card-img-top" alt="Image">
+            <img src="{{ image.image.url }}" class="card-img-top" alt="Image">
         </div>
         <div class="card-body">
             <div class="col-12">
-                <form method="post" action="/gallery/update_image/{{image.id}}">
+                <form method="post" action="/gallery/update_image/{{ image.id }}">
                     {% csrf_token %}
                     <div class="mb-3">
-                    <label for="caption{{image.id}}" class="form-label">Caption</label>
-                    <input type="text"
-                        class="form-control" name="caption{{image.id}}" id="caption{{image.id}}" value="{{image.caption}}">
+                        <label for="caption{{ image.id }}" class="form-label">Caption</label>
+                        <input type="text" class="form-control" name="caption{{ image.id }}" id="caption{{ image.id }}" value="{{ image.caption }}">
                     </div>
                     <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="visible{{image.id}}" name="visible{{image.id}}" {% if image.visible %}checked{% endif %}>
-                        <label class="form-check-label" for="visible{{image.id}}">Public Visibility</label>
-                    </div>
-                    <div class="mb-3">
-                        <label for="total_likes{{image.id}}" class="form-label">Total Likes</label>
-                        <input type="number" name="total_likes{{image.id}}" readonly value="{{image.total_likes}}" id="total_likes{{image.id}}" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label for="total_comments{{image.id}}" class="form-label">Total Comments</label>
-                        <input type="number" name="total_comments{{image.id}}" readonly value="{{image.total_comments}}" id="total_comments{{image.id}}" class="form-control">
+                        <input type="checkbox" class="form-check-input" id="visible{{ image.id }}" name="visible{{ image.id }}" {% if image.visible %}checked{% endif %}>
+                        <label class="form-check-label" for="visible{{ image.id }}">Public Visibility</label>
                     </div>
                     <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="username_visible{{image.id}}" name="username_visible{{image.id}}" {% if image.username_visible %}checked{% endif %}>
-                        <label class="form-check-label" for="username_visible{{image.id}}">Username Visibility</label>
+                        <input type="checkbox" class="form-check-input" id="username_visible{{ image.id }}" name="username_visible{{ image.id }}" {% if image.username_visible %}checked{% endif %}>
+                        <label class="form-check-label" for="username_visible{{ image.id }}">Username Visibility</label>
                     </div>
+                    <div class="mb-3">
+                        <label for="total_likes{{ image.id }}" class="form-label">Total Likes</label>
+                        <div class="input-group">
+                            <input type="number" name="total_likes{{ image.id }}" readonly value="{{ image.total_likes }}" id="total_likes{{ image.id }}" class="form-control">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#likesModal{{ image.id }}" style="z-index: 0;">
+                                View
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="total_comments{{ image.id }}" class="form-label">Total Comments</label>
+                        <div class="input-group">
+                            <input type="number" name="total_comments{{ image.id }}" readonly value="{{ image.total_comments }}" id="total_comments{{ image.id }}" class="form-control">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#commentsModal{{ image.id }}" style="z-index: 0;">
+                                View
+                            </button>
+                        </div>
+                    </div>
+
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                         <button type="submit" class='btn btn-success'>Save Image</button>
                     </div>
                 </form>
-                <form action="/gallery/delete_image/{{image.id}}" method="post">
+                <form action="/gallery/delete_image/{{ image.id }}" method="post">
                     {% csrf_token %}
                     <div class="d-grid gap-2 d-md-flex mt-1 justify-content-md-end">
                         <button type="submit" class='btn btn-danger'>Delete Image</button>
@@ -40,5 +50,63 @@
                 </form>
             </div>
         </div>
-    </div>                          
+    </div>
 </div>
+
+<div class="modal fade" id="likesModal{{ image.id }}" tabindex="-1" aria-labelledby="likesModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title" id="likesModalLabel">Total Likes</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                
+                {% for like in total_likes %}
+                
+                    {% if like.image_id.id == image.id %}
+
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div>
+                                <b>{{ like.user }}</b>
+                            </div>
+                            <div>
+                                <a href="{% url 'remove_like_profile' like.id %}" class="btn btn-danger">Remove</a>
+                            </div>
+                        </div>
+
+                    {% endif %}
+
+                {% endfor %}
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="commentsModal{{ image.id }}" tabindex="-1" aria-labelledby="commentsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title" id="commentsModalLabel">Total Comments</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% for comment in total_comments %}
+                    {% if comment.image_id.id == image.id %}
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div>
+                                <b>{{ comment.user }}</b> {{ comment.comment }}
+                            </div>
+                            <div>
+                                <a href="{% url 'remove_comment_profile' comment.id %}" class="btn btn-danger">Remove</a>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+

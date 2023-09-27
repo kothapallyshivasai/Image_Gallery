@@ -13,12 +13,12 @@
         </div>
         <div class="card-body">
             {% if image.id in user_likes %}
-                <a href="/gallery/remove_like/{{ image.id }}"><img src="/media/background_images/full_heart.png" style="height: 20px; width: 20px; margin-right: 5px;"></a>
+                <a href="/gallery/remove_like/{{ image.id }}"><img src="/media/background_images/full_heart.png" style="height: 25px; width: 25px; margin-right: 5px;"></a>
             {% else %}
-                <a href="/gallery/image_like/{{ image.id }}"><img src="/media/background_images/empty_heart.png" style="height: 20px; width: 20px; margin-right: 5px;"></a>
+                <a href="/gallery/image_like/{{ image.id }}"><img src="/media/background_images/empty_heart.png" style="height: 25px; width: 25px; margin-right: 5px;"></a>
             {% endif %}
-            <a href="#"><img src="/media/background_images/comment.png" style="height: 20px; width: 20px; margin-right: 5px;"></a>
-            <a href="#"><img src="/media/background_images/share.png" style="height: 20px; width: 20px; margin-right: 5px;"></a>
+            <a href="#"><img src="/media/background_images/comment.png" style="height: 25px; width: 25px; margin-right: 5px;"></a>
+            <a href="#"><img src="/media/background_images/share.png" style="height: 25px; width: 25px; margin-right: 5px;"></a>
 
             <div class="mt-1" id="likesText{{image.id}}">
                 {{ image.total_likes }} likes

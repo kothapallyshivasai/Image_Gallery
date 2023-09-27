@@ -118,12 +118,15 @@ def profile(request):
 
     if request.user.is_superuser: return redirect("/admin")
     images = Image.objects.filter(user=request.user).order_by('-id')
+    total_likes = Likes.objects.all()
+    total_comments = Comments.objects.all()
+
     image_count = images.count
     paginator = Paginator(images, 6)
     page_number = request.GET.get('page', 1)
     images = paginator.get_page(page_number)
     total_pages = images.paginator.num_pages
-    return render(request, "user/profile.html", {'objects': images, 'image_count': image_count, 'totalPageList': [(n + 1) for n in range(total_pages)]})
+    return render(request, "user/profile.html", {'objects': images, 'total_likes': total_likes, "total_comments": total_comments, 'image_count': image_count, 'totalPageList': [(n + 1) for n in range(total_pages)]})
 
 @login_required
 @never_cache
@@ -196,6 +199,21 @@ def remove_like(request, image_id):
         pass
 
     return redirect("/gallery/user_home")
+
+
+@login_required
+@never_cache
+def remove_like_profile(request, like_id):
+    if request.user.is_superuser: return redirect("/admin")
+
+    try:
+        likes = Likes.objects.get(id=like_id)
+        if request.user.id == likes.user.id:
+            likes.delete()
+    except Exception as e:
+        print(e)
+
+    return redirect("profile")
     
 
 @login_required
@@ -217,6 +235,22 @@ def add_comment(request, image_id):
 
     return redirect("/gallery/user_home")
 
+
+@login_required
+@never_cache
+def remove_comment_profile(request, comment_id):
+    if request.user.is_superuser: return redirect("/admin")
+
+    try:
+        comment = Comments.objects.get(id=comment_id)
+        if request.user.id == comment.image_id.user.id:
+            comment.delete()
+        else:
+            print("Nhk")
+    except Exception as e:
+        print(e)
+
+    return redirect("profile")
 
 
 @login_required
