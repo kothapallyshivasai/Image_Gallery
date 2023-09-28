@@ -54,11 +54,17 @@ def user_home(request):
     page_number = request.GET.get('page', 1)
     images = paginator.get_page(page_number)
     total_pages = images.paginator.num_pages
+
+    login_param = request.GET.get('login', None)
+    if login_param == '1':
+        success = True
+    else:
+        success = False
+
     
     return render(request, 'user/index.html', {'objects': images,
             'totalPageList': [(n + 1) for n in range(total_pages)],
-            'user_likes': user_likes})
-
+            'user_likes': user_likes, "success": success})
 
 
 @login_required
@@ -68,8 +74,22 @@ def upload_image(request):
     user = request.user
     if user.is_superuser:
         return redirect("/admin")
+    
+    change = request.GET.get("change", None)
 
-    return render(request, 'user/upload_image.html', {})
+    if change != None:
+        change = True
+    else:
+        change = False
+
+    fail = request.GET.get('fail', None)
+
+    if fail != None:
+        fail = True
+    else:
+        fail = False
+
+    return render(request, 'user/upload_image.html', {'change': change, 'fail': fail})
 
 
 @login_required
@@ -87,9 +107,9 @@ def validate_upload_image(request):
             image = PILImage.open(image_file)
             valid_formats = ('JPEG', 'JPG', 'PNG', 'GIF')
             if image.format not in valid_formats:
-                return redirect("/gallery/upload_image")
+                return redirect("/gallery/upload_image?fail=1")
         except Exception as e:
-            return redirect("/gallery/upload_image")
+            return redirect("/gallery/upload_image?fail=1")
 
         user = request.user
         caption = request.POST.get('caption')
@@ -106,9 +126,9 @@ def validate_upload_image(request):
 
         image_object.save()
 
-        return redirect("/gallery/profile")
+        return redirect("/gallery/upload_image?change=1")
 
-    return redirect('/gallery/upload_image/')
+    return redirect('/gallery/upload_image')
 
 
 
@@ -120,13 +140,44 @@ def profile(request):
     images = Image.objects.filter(user=request.user).order_by('-id')
     total_likes = Likes.objects.all()
     total_comments = Comments.objects.all()
+    image = request.GET.get("image", None)
+    if image != None:
+        image_saved = True
+    else:
+        image_saved = False
+
+
+
+    image_deleted = request.GET.get("image_deleted", None)
+    if image_deleted != None:
+        image_deleted = True
+    else:
+        image_deleted = False
+
+
+    image_not_deleted = request.GET.get("image_not_deleted", None)
+    if image_not_deleted != None:
+        image_not_deleted = True
+    else:
+        image_not_deleted = False
+
+
+
+    changes = request.GET.get("changes", None)
+
+    if changes != None:
+        change = True
+
+    else:
+        change = False
 
     image_count = images.count
     paginator = Paginator(images, 6)
     page_number = request.GET.get('page', 1)
     images = paginator.get_page(page_number)
     total_pages = images.paginator.num_pages
-    return render(request, "user/profile.html", {'objects': images, 'total_likes': total_likes, "total_comments": total_comments, 'image_count': image_count, 'totalPageList': [(n + 1) for n in range(total_pages)]})
+    return render(request, "user/profile.html", {'objects': images, "image_deleted": image_deleted, "image_not_deleted": image_not_deleted
+                                                  , "image_saved": image_saved, "change": change, 'total_likes': total_likes, "total_comments": total_comments, 'image_count': image_count, 'totalPageList': [(n + 1) for n in range(total_pages)]})
 
 @login_required
 @never_cache
@@ -144,12 +195,11 @@ def save_profile(request):
             updated_user.set_password(request.POST.get('password'))
         try:
             updated_user.save()
-            return redirect("/gallery/profile")
+            return redirect("/gallery/profile?changes=1")
         except Exception as e:
             return redirect("/gallery/profile")
     
     return redirect("/gallery/profile")
-
 
 @login_required
 @never_cache
@@ -164,7 +214,7 @@ def update_image(request, id):
             image.visible = request.POST.get(f'visible{image.id}') == "on"
             image.username_visible = request.POST.get(f'username_visible{image.id}') == "on"
             image.save()
-            return redirect("/gallery/profile")
+            return redirect("/gallery/profile?image=1")
         except Exception as e:
             return redirect("/gallery/profile")
             
@@ -212,7 +262,6 @@ def remove_like_profile(request, like_id):
             likes.delete()
     except Exception as e:
         print(e)
-
     return redirect("profile")
     
 
@@ -261,13 +310,14 @@ def delete_image(request, id):
     if request.method == "POST":
         
         try:
-            image = Image.objects.get(pk=id)
+            image = Image.objects.get(user=request.user, pk=id)
             image.image.delete(save=True)
             image.delete()
-            return redirect("/gallery/profile")
+            return redirect("/gallery/profile?image_deleted=1")
 
         except Exception as e:
-            return redirect("/gallery/profile")
+            print(e)
+            return redirect("/gallery/profile?image_not_deleted=1")
 
     return redirect("/gallery/profile")
 
@@ -290,7 +340,7 @@ def login(request):
 
         if user is not None:
             auth_login(request, user)  
-            return redirect("/gallery/user_home")
+            return redirect("/gallery/user_home?login=1")
         else:
             return render(request, 'login.html', {'error_message': True})
 

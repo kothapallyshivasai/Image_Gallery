@@ -18,7 +18,7 @@
                     <a class="nav-link active text-white hover-animation" aria-current="page" href=" {% url 'upload_image' %} ">Upload Image</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white hover-animation" href=" {% url 'logout' %} ">Logout</a>
+                    <a class="nav-link text-white hover-animation" onclick="logout_navbar(event)" href=" {% url 'logout' %} ">Logout</a>
                 </li>
             </ul>
         </div>
@@ -28,3 +28,23 @@
     <strong>Welcome {{user.username}}</strong>, It's a pleasure to connect with you today. How can we assist you?
     <button type="button" class="btn-close" disabled data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
+
+<script>
+    function logout_navbar(event) {
+        event.preventDefault();
+
+        swal({
+            title: "Are you sure you want to logout?",
+            text: "You will be logged out of your account.",
+            icon: "warning",
+            buttons: {
+                cancel: "No",
+                confirm: "Yes"
+            },
+        }).then((willLogout) => {
+            if (willLogout) {
+                window.location.href = "{% url 'logout' %}";
+            }
+        });
+    }
+</script>

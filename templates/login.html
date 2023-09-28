@@ -6,24 +6,52 @@
     <link rel="stylesheet" href="styles.css">
     <title>Login</title>
     {% include 'includes.html' %}
+    <script>
+        function fields_check(event){
+            username = document.getElementById("username").value
+            password = document.getElementById("password").value
+            if(username == "" || password==""){
+                event.preventDefault()
+                swal("Error!", "Fill all your Details!", "error");
+            }
+        }
+    </script>
+    <style>
+        @media (min-width: 768px) {
+            .full-height-image {
+                height: 94vh;
+            }
+        }
+        @media (max-width: 768px){
+            .margin-bottom-footer {
+                margin-bottom: 40px;
+            }
+            .full-height-image {
+                margin-top: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
     {% include 'default_navbar.html' %}
     <div class="container-fluid mt-5">
         <div class="row">
-            <div class="col-10 col-md-4 offset-md-0 offset-1 mt-5">
+            <div class="col-md-8 order-md-2">
+                <img src="/media/background_images/login_image_cyberpunk.jpg" class="img-fluid full-height-image" alt="LOL" />
+            </div>
+            <div class="col-md-4 order-md-1 mt-5">
                 <h1 class="text-center mt-4"><img src="/media/icons/magic-wand.png" style="height: 50px; width: 50px;" alt="ecommerce" /> <strong>Wand Gallery</strong></h1>
                 <h3 class="text-center mt-2">Login</h3>
                 <div class="mt-4 text-center">
                     Don't have an account? <a href="/gallery/register" style="color: orange;">Register Now!</a>
                 </div>
-                <form method="post" action=" {% url 'login' %} ">
+                <form method="post" action="{% url 'login' %}">
                     {% csrf_token %}
                     <div class="form-group mt-3">
                         <div class="row">
                             <div class="col-md-10 col-12 offset-md-1">
                                 <label for="username">Username</label>
-                                <input type="text" required class="form-control" id="username" name="username">
+                                <input type="text" class="form-control" id="username" name="username">
                             </div>
                         </div>
                     </div>
@@ -32,7 +60,7 @@
                             <div class="col-md-10 col-12 offset-md-1">
                                 <label for="password">Password</label>
                                 <div class="input-group">
-                                    <input type="password" class="form-control" id="password" name="password" required>
+                                    <input type="password" class="form-control" id="password" name="password">
                                     <div class="input-group-append">
                                         <button class="btn btn-outline-secondary" onclick="togglePasswordVisibility()" type="button" id="toggleButton">
                                             <img src="/media/icons/show_password.png" style="height: 20px; width: 20px;" alt="show" />
@@ -44,26 +72,25 @@
                         </div>
                     </div>
                     <div class="text-center">
-                        <button type="submit" style="width: 82%;" class="btn btn-primary btn-block mt-4">Login</button>
+                        <button type="submit" onclick="fields_check(event)" style="width: 82%;" class="btn btn-primary btn-block mt-4">Login</button>
                     </div>
                     <div class="mt-3 text-center">
                         <div class="mt-4 text-danger">
                             <div class="row">
-                                <div class="col-10 offset-1">
+                                <div class="col-10 offset-1 margin-bottom-footer">
                                     Copyright &copy; 2023 Wand Gallery, LLC Website is a trademark of this website
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="text-center mt-4">
-                        {% if error_message %} Invalid username or password {% endif %}
-                    </div>
+                    {% if error_message %}
+                        <script>
+                            swal("Error!", "Invalid username or password!", "error");
+                        </script>
+                    {% endif %}
                 </form>
             </div>
-            <div class="col-12 col-md-8">
-                <img src="/media/background_images/login_image_cyberpunk.jpg" style="width: 101%; height: 94vh;" alt="LOL" />
-            </div>            
         </div>
-    </div>       
+    </div>
 </body>
 </html>

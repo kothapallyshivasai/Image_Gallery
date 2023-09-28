@@ -21,7 +21,7 @@
   
 .hover-animation:hover::after{
     transform: scale(1);
-}
+} 
   
 .navbar{
     position: fixed;

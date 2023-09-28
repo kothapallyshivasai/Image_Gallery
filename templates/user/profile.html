@@ -7,6 +7,34 @@
     {% include "includes.html" %}
 </head>
 <body>
+    {% if change %}
+        <script>
+            swal("Success", "Changes are Successful", "success");
+        </script>
+    {% endif %}
+
+    {% if image_saved %}
+        <script>
+            swal("Success", "Image Updated Successfully", "success");
+        </script>
+    {% endif %}
+
+    {% if image_deleted %}
+    <script>
+        swal("Success", "Image Deleted Successfully", "success");
+    </script>
+    {% endif %}
+
+    {% if image_not_deleted %}
+        <script>
+            swal({
+                title: "Error",
+                text: "Something went wrong, Please try again.",
+                icon: "warning"
+            })
+        </script>
+    {% endif %}
+
     {% include "user/navbar.html" %}
     <form action="/gallery/save_profile/" method="post">
         {% csrf_token %}

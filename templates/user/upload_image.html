@@ -15,10 +15,43 @@
             } else {
                 user.type = "password";
             }
-        }        
+        }  
+
+        function form_validation(event) {
+            event.preventDefault();
+
+            var imageInput = document.getElementById("image");
+            var captionInput = document.getElementById("caption");
+
+            if (!imageInput.value.trim() && !captionInput.value.trim()) {
+                swal("Error", "Please upload an image and enter a caption.", "error");
+            } 
+            else if (!imageInput.value.trim()) {
+                swal("Error", "Please upload an image.", "error");
+            } 
+            else if (!captionInput.value.trim()) {
+                swal("Error", "Please enter a caption.", "error");
+            } 
+            else {
+                event.currentTarget.form.submit();
+            }
+        }
+
     </script>
 </head>
 <body>
+    {% if change %}
+        <script>
+            swal("Success", "Image Uploaded", "success");
+        </script>
+    {% endif %}
+
+    {% if fail %}
+        <script>
+            swal("Error", "Please Upload a valid image", "error");
+        </script>
+    {% endif %}
+
     {% include "user/navbar.html" %}
     <h1 class="text-center">Upload Image</h1>
     <p class="text-center">Summer Collection New Modern Image's</p>
@@ -50,7 +83,7 @@
                                 <input type="checkbox" onclick="usernameVisibility()" class="form-check-input" id="username_visible" name="username_visible">
                                 <label class="form-check-label" for="username_visible">Username Visibility</label>
                             </div>
-                            <button type="submit" class="btn btn-primary">Upload</button>
+                            <button type="submit" onclick="form_validation(event)" class="btn btn-primary">Upload</button>
                         </div>
                     </div>
                 </div>
