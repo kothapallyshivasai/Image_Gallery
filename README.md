@@ -2,11 +2,11 @@
 Django Image Gallery with User Authentication
 
 Project setup:
-pip install django
-cd image_gallery
-python manage.py makemigrations
-python manage.py migrate
-python manage.py runserver
+pip install django <br> 
+cd image_gallery <br>
+python manage.py makemigrations <br>
+python manage.py migrate <br>
+python manage.py runserver <br>
 
 Description:
 You've created a feature-rich image gallery web application using Django, a popular Python web framework. The application integrates seamlessly with the built-in SQLite database, making it easy to manage and store image data. One of the key features you've implemented is user authentication, which enhances security and ensures that only registered users can access and view the images within the gallery.
