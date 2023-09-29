@@ -5,6 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
     {% include 'includes.html' %}
+    <script>
+      function registerFields(event){
+
+        let username = document.getElementById('username').value
+        let email = document.getElementById('email').value
+        let password1 = document.getElementById('password').value
+        let password2 = document.getElementById('password2').value
+        let termsandservices = document.getElementById('termsandservices').checked
+
+        if(username === "" || email ===""){
+          swal("Error", "Please Enter all credentials", "error")
+          event.preventDefault();
+        }
+
+        else if(password1 === "" || password2 === ""){
+          swal("Error", "Passwords shouldn't be empty", "error")
+          event.preventDefault();
+        }
+
+        else if(!termsandservices){
+          swal("Error", "Please accept terms and conditions", "error")
+          event.preventDefault();
+        }
+        
+      }
+    </script>
 </head>
 <body>
     {% include 'default_navbar.html' %}
@@ -23,14 +49,14 @@
                         {% csrf_token %}
                         <div class="d-flex flex-row align-items-center mb-4">
                           <div class="form-outline flex-fill mb-0">
-                            <input required type="text" name="username" id="username" class="form-control" />
+                            <input type="text" name="username" id="username" class="form-control" />
                             <label class="form-label" for="username"><img src="/media/register_icons/username.png" alt="Username icon" style="height: 20px; width: 20px; margin-top: -4px;"> Username</label>
                           </div>
                         </div>
       
                         <div class="d-flex flex-row align-items-center mb-4">
                           <div class="form-outline flex-fill mb-0">
-                            <input required type="email" name="email" id="email" class="form-control" />
+                            <input type="email" name="email" id="email" class="form-control" />
                             <label class="form-label" for="email"><img src="/media/register_icons/email.png" alt="Username icon" style="height: 20px; width: 20px; margin-top: -4px;"> Email ID</label>
                           </div>
                         </div>
@@ -38,7 +64,7 @@
                         <div class="d-flex flex-row align-items-center mb-4">
                           <div class="form-outline flex-fill mb-0">
                             <div class="input-group">
-                              <input type="password" class="form-control" id="password" name="password" required>
+                              <input type="password" class="form-control" id="password" name="password">
                               <div class="input-group-append">
                                   <button class="btn btn-outline-secondary" onclick="togglePasswordVisibility()" type="button" id="toggleButton">
                                       <img src="/media/icons/show_password.png" style="height: 20px; width: 20px;" alt="show" />
@@ -51,13 +77,13 @@
       
                         <div class="d-flex flex-row align-items-center mb-4">
                           <div class="form-outline flex-fill mb-0">
-                            <input required type="password" name="password2" id="password2" class="form-control" />
+                            <input type="password" name="password2" id="password2" class="form-control" />
                             <label class="form-label" for="password2"><img src="/media/register_icons/password.png" alt="Username icon" style="height: 20px; width: 20px; margin-top: -4px;"> Repeat your password</label>
                           </div>
                         </div>
       
                         <div class="form-check d-flex justify-content-center mb-5">
-                          <input required class="form-check-input me-2" type="checkbox" id="termsandservices" name="termsandservices" />
+                          <input class="form-check-input me-2" type="checkbox" id="termsandservices" name="termsandservices" />
                           <label class="form-check-label" for="termsandservices">
                             I agree all statements in <a href="#">Terms of service</a>
                           </label>
@@ -66,13 +92,15 @@
                         <div class="text-center md-3">
                         {% if messages %}
                             {% for message in messages %}
-                                {{ message }}
+                                <script>
+                                  swal("Error", "{{ message }}", "error")
+                                </script>
                             {% endfor %}
                         {% endif %}
                         </div>
 
                         <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                          <button type="submit" class="btn btn-primary btn-lg">Register</button>
+                          <button type="submit" onclick="registerFields(event)" class="btn btn-primary btn-lg">Register</button>
                         </div>
       
                       </form>

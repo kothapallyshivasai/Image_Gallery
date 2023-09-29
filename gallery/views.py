@@ -61,10 +61,17 @@ def user_home(request):
     else:
         success = False
 
+    login_param = request.GET.get('registration', None)
+    if login_param == '1':
+        registration = True
+    else:
+        registration = False
+    
+
     
     return render(request, 'user/index.html', {'objects': images,
             'totalPageList': [(n + 1) for n in range(total_pages)],
-            'user_likes': user_likes, "success": success})
+            'user_likes': user_likes, "success": success, "registration": registration})
 
 
 @login_required
@@ -380,6 +387,6 @@ def register(request):
         authenticated_user = authenticate(request, username=username, password=password)
         
         auth_login(request, authenticated_user)  
-        return redirect("/gallery/user_home")
+        return redirect("/gallery/user_home?registration=1")
     else:
         return render(request, 'register.html', {})
