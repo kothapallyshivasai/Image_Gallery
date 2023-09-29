@@ -14,3 +14,6 @@ from django.core.wsgi import get_wsgi_application
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'image_gallery.settings')
 
 application = get_wsgi_application()
+
+# We want to connect to vercel app, vercel.app in json
+app = application
