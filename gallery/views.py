@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Image, Likes, Comments
+from .models import Image, Likes, Comments, Deleted_Comments
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 from django.contrib import messages
@@ -300,6 +300,11 @@ def remove_comment_profile(request, comment_id):
     try:
         comment = Comments.objects.get(id=comment_id)
         if request.user.id == comment.image_id.user.id:
+            delete_comment = Deleted_Comments()
+            delete_comment.commented_user = comment.user
+            delete_comment.image = comment.image_id
+            delete_comment.content = comment.comment
+            delete_comment.save()
             comment.delete()
         else:
             print("Nhk")

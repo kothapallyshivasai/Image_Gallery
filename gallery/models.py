@@ -34,3 +34,9 @@ class Comments(models.Model):
     comment = models.TextField()
     image_id = models.ForeignKey(Image, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+class Deleted_Comments(models.Model):
+    id = models.AutoField(primary_key=True)
+    commented_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    image = models.ForeignKey(Image, on_delete=models.CASCADE)
