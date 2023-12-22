@@ -43,7 +43,16 @@
             },
         }).then((willLogout) => {
             if (willLogout) {
-                window.location.href = "{% url 'logout' %}";
+                var form = document.createElement('form');
+                form.method = 'POST';
+                form.action = "{% url 'logout' %}";
+                var csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = 'csrfmiddlewaretoken';
+                csrfInput.value = '{{ csrf_token }}';
+                form.appendChild(csrfInput);
+                document.body.appendChild(form);
+                form.submit();
             }
         });
     }
