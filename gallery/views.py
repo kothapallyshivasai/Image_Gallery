@@ -122,13 +122,15 @@ def validate_upload_image(request):
         caption = request.POST.get('caption')
         visible = request.POST.get('visible') == "on"
         username_visible = request.POST.get('username_visible') == "on"
+        private = request.POST.get('private') == "on"
 
         image_object = Image(
             image=image_file,
             user=user,
             caption=caption,
             visible=visible,
-            username_visible=username_visible
+            username_visible=username_visible,
+            private = private
         )
 
         image_object.save()
@@ -220,6 +222,7 @@ def update_image(request, id):
             image.caption = request.POST.get(f"caption{image.id}")
             image.visible = request.POST.get(f'visible{image.id}') == "on"
             image.username_visible = request.POST.get(f'username_visible{image.id}') == "on"
+            image.private = request.POST.get(f'private{image.id}') == "on"
             image.save()
             return redirect("/gallery/profile?image=1")
         except Exception as e:
@@ -395,3 +398,41 @@ def register(request):
         return redirect("/gallery/user_home?registration=1")
     else:
         return render(request, 'register.html', {})
+    
+
+
+@login_required
+@never_cache
+def liked_images(request):
+    likes = Likes.objects.filter(user=request.user)
+    images = []
+    for like in likes:
+        image = Image.objects.get(id=like.image_id.id)
+        if image:
+            images.append(image)
+
+    user_likes = Likes.objects.filter(user=request.user).values_list('image_id', flat=True)
+    paginator = Paginator(images, 8)
+    page_number = request.GET.get('page', 1)
+    images = paginator.get_page(page_number)
+    total_pages = images.paginator.num_pages
+
+    
+    return render(request, 'user/liked_images.html', {'objects': images,
+            'totalPageList': [(n + 1) for n in range(total_pages)],
+            'user_likes': user_likes})
+
+@login_required
+@never_cache
+def private_images(request):
+    images = Image.objects.filter(user=request.user, private=True)
+    paginator = Paginator(images, 6)
+    page_number = request.GET.get('page', 1)
+    images = paginator.get_page(page_number)
+    total_pages = images.paginator.num_pages
+    user_likes = Likes.objects.filter(user=request.user).values_list('image_id', flat=True)
+
+    return render(request, 'user/private_images.html', {'objects': images,
+                                                        'totalPageList': [(n + 1) for n in range(total_pages)],
+                                                        'user_likes': user_likes})
+    

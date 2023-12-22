@@ -6,8 +6,9 @@ class Image(models.Model):
     image = models.ImageField(null=False, upload_to="userimages/")
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     caption = models.CharField(max_length=100)
-    visible = models.BooleanField(default=True)
-    username_visible = models.BooleanField(default=True)
+    visible = models.BooleanField(default=False)
+    username_visible = models.BooleanField(default=False)
+    private = models.BooleanField(default=False)
 
     def username(self):
         return self.user.username

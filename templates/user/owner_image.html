@@ -52,6 +52,10 @@
                         <input type="checkbox" class="form-check-input" id="username_visible{{ image.id }}" name="username_visible{{ image.id }}" {% if image.username_visible %}checked{% endif %}>
                         <label class="form-check-label" for="username_visible{{ image.id }}">Username Visibility</label>
                     </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="private{{ image.id }}" name="private{{ image.id }}" {% if image.private %}checked{% endif %}>
+                        <label class="form-check-label" for="private{{ image.id }}">Private Image</label>
+                    </div>
                     <div class="mb-3">
                         <label for="total_likes{{ image.id }}" class="form-label">Total Likes</label>
                         <div class="input-group">

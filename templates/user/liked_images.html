@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liked Images</title>
+    {% include "includes.html" %}
+</head>
+<body>
+    {% include "user/navbar.html" %}
+
+    <h1 class="text-center text-muted">Liked Images</h1>
+    <div class="container">
+        <div class="card border-black">
+            <div class="card-body">
+                <div class="row">
+                    {% for image in objects %}
+                        {% include "user/user_image_component.html" with image=image %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% include "user/pagination.html" %}
+        </div>
+    </div>
+
+    {% include 'footer.html' %} 
+</body>
+</html>

@@ -20,5 +20,7 @@ urlpatterns = [
     path('add_comment/<int:image_id>', add_comment, name="add_comment"),
     path('remove_comment_profile/<int:comment_id>', remove_comment_profile, name="remove_comment_profile"),
     path('remove_like_profile/<int:like_id>', remove_like_profile, name="remove_like_profile"),
+    path("liked_images/", liked_images, name="liked_images"),
+    path("private_images/", private_images, name="private_images"),
 ]
  

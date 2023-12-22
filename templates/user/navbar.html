@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand text-white" href=" {% url 'user_home' %} "><i>Wand Image Gallery</i>
-            <img src="/media/icons/magic-wand.png" alt="Wand" id="wand">
+            <img src="/media/icons/camera.png" alt="Wand" id="wand">
         </a>
         <button class="navbar-toggler bg-success" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -17,6 +17,19 @@
                 <li class="nav-item">
                     <a class="nav-link active text-white hover-animation" aria-current="page" href=" {% url 'upload_image' %} ">Upload Image</a>
                 </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle active text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      More
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li>
+                        <a class="nav-link active hover-animation" aria-current="page" href=" {% url 'liked_images' %} ">Liked Images</a>
+                      </li>
+                      <li>
+                        <a class="nav-link active hover-animation" aria-current="page" href=" {% url 'private_images' %} ">Private Images</a>
+                      </li>
+                    </ul>
+                  </li>
                 <li class="nav-item">
                     <a class="nav-link text-white hover-animation" onclick="logout_navbar(event)" href=" {% url 'logout' %} ">Logout</a>
                 </li>
