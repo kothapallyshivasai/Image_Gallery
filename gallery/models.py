@@ -41,3 +41,6 @@ class Deleted_Comments(models.Model):
     commented_user = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField()
     image = models.ForeignKey(Image, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"user: {self.commented_user}, comment: {self.content}"
