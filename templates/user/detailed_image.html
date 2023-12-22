@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image View</title>
+    {% include "includes.html" %}
+    <script>
+
+        function image_like(imageId) {
+            var url = `/gallery/image_like/${imageId}`;
+            window.location.href = url;
+        }
+
+        function showCommentsModal(imageId) {
+            var commentsModal = new bootstrap.Modal(document.getElementById('commentsModal' + imageId));
+            commentsModal.show();
+        }
+
+        function showLikesModal(imageId) {
+            var likesModal = new bootstrap.Modal(document.getElementById('likesModal' + imageId));
+            likesModal.show();
+        }
+    
+    </script> 
+</head>
+<body>
+    {% include "user/navbar.html" %}
+    <div class="col-6 offset-3">
+        <div class="card mb-3">
+            <div>
+                <img src="{{ image.image.url }}" ondblclick="image_like('{{image.id}}')" class="card-img-top" alt="Image">
+            </div>
+            <div class="card-body">
+                {% if userLiked %}
+                    <a href="/gallery/remove_like/{{ image.id }}"><img src="/media/background_images/full_heart.png" style="height: 25px; width: 25px; margin-right: 5px;"></a>
+                {% else %}
+                    <a href="/gallery/image_like/{{ image.id }}"><img src="/media/background_images/empty_heart.png" style="height: 25px; width: 25px; margin-right: 5px;"></a>
+                {% endif %}
+                <a href="#"><img src="/media/background_images/comment.png" style="height: 25px; width: 25px; margin-right: 5px;"></a>
+                <a href="/gallery/download_image/{{image.id}}"><img src="/media/background_images/download.png" style="height: 25px; width: 25px; margin-right: 5px;"></a>
+
+                <div class="mt-1" id="likesText{{image.id}}" onclick="showLikesModal('{{image.id}}')">
+                    {{ image.total_likes }} likes
+                </div>
+
+                <div class="modal fade" id="likesModal{{image.id}}" tabindex="-1" aria-labelledby="likesModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="likesModalLabel">Likes</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                {% if likes.count == 0 %}
+                                    <h5 class="text-center">No Likes on this Post</h5>
+                                {% endif %}
+                                {% for like in likes %}
+                                    <p>{{ like.user.username }}</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-1">
+                    <b>{{ image.username }}</b> {{image.caption}}
+                </div>
+
+                <div class="text-muted" onclick="showCommentsModal('{{image.id}}')">
+                    {{ image.total_comments }} Comments
+                </div>
+
+                <div class="modal fade" id="commentsModal{{image.id}}" tabindex="-1" aria-labelledby="commentsModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="commentsModalLabel">Comments</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                {% if comments.count == 0 %}
+                                    <h5 class="text-center">No Comments on this Post</h5>
+                                {% endif %}
+                                {% for comment in comments %}
+                                    <p>
+                                        <b>{{ comment.user.username }}</b>: {{ comment.comment }}
+                                    </p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <form action="{% url 'add_comment' image.id %}" method="post">
+    
+                    {% csrf_token %}
+    
+                    <div class="input-group mt-2">
+                        <input type="text" class="form-control" id="comment{{image.id}}" required name="comment{{image.id}}" placeholder="Add a comment...">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-success" type="submit" style="z-index: 0;">
+                                Post
+                            </button>
+                        </div>
+                    </div>
+                
+                </form>
+            </div>
+        </div>                          
+    </div>
+    
+</body>
+</html>

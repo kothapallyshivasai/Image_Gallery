@@ -5,6 +5,11 @@
         window.location.href = url;
     }
 
+    function image_view(imageId) {
+        var url = `/gallery/detailed_image/${imageId}`;
+        window.location.href = url;
+    }
+
 </script>
 <div class="col-12 col-sm-6">
     <div class="card mt-4 mb-3">
@@ -18,15 +23,15 @@
                 <a href="/gallery/image_like/{{ image.id }}"><img src="/media/background_images/empty_heart.png" style="height: 25px; width: 25px; margin-right: 5px;"></a>
             {% endif %}
             <a href="#"><img src="/media/background_images/comment.png" style="height: 25px; width: 25px; margin-right: 5px;"></a>
-            <a href="#"><img src="/media/background_images/share.png" style="height: 25px; width: 25px; margin-right: 5px;"></a>
+            <a href="/gallery/download_image/{{image.id}}"><img src="/media/background_images/download.png" style="height: 25px; width: 25px; margin-right: 5px;"></a>
 
-            <div class="mt-1" id="likesText{{image.id}}">
+            <div class="mt-1" id="likesText{{image.id}}" onclick="image_view('{{image.id}}')">
                 {{ image.total_likes }} likes
             </div>
-            <div class="mb-1">
+            <div class="mb-1" onclick="image_view('{{image.id}}')">
                 <b>{{ image.username }}</b> {{image.caption}}
             </div>
-            <div class="text-muted">
+            <div class="text-muted" onclick="image_view('{{image.id}}')">
                 {{ image.total_comments }} Comments
             </div>
 

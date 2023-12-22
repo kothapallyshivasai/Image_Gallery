@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from .models import Image, Likes, Comments, Deleted_Comments
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
@@ -287,6 +287,8 @@ def add_comment(request, image_id):
             comment_object.image_id = Image.objects.get(pk=image_id)
             comment_object.user = request.user
             comment_object.comment = comment
+            print("Comment:", comment_object.comment)
+            print("Comment:", comment)
             comment_object.save()
         except Exception as e:
             print(e)
@@ -436,3 +438,36 @@ def private_images(request):
                                                         'totalPageList': [(n + 1) for n in range(total_pages)],
                                                         'user_likes': user_likes})
     
+@login_required
+@never_cache
+def detailed_image(request, id):
+    try:
+        image = Image.objects.get(pk=id)
+        comments = Comments.objects.filter(image_id=id)
+        likes = Likes.objects.filter(image_id=id)
+        if not image.username_visible:
+            image.username = "Anonymous"
+
+        try:
+            userLiked = Likes.objects.get(image_id=id, user=request.user)
+            userLiked = True
+        except Exception as e2:
+            userLiked = False
+        
+        return render(request, "user/detailed_image.html", {"image": image, "comments": comments, "likes": likes, "userLiked": userLiked})
+    except Exception as e:
+        print(e)
+        return redirect("/gallery/user_home")
+    
+
+@login_required
+@never_cache
+def download_image(request, id):
+    image = get_object_or_404(Image, pk=id)
+    response = HttpResponse(image.image, content_type='image/jpeg')
+    response['Content-Disposition'] = f'attachment; filename="{image.caption}_image.jpg"'
+    return response
+
+def custom_404_view(request, exception):
+    del exception
+    return render(request, '404.html', {}, status=404)

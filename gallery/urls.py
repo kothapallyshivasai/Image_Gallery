@@ -22,5 +22,7 @@ urlpatterns = [
     path('remove_like_profile/<int:like_id>', remove_like_profile, name="remove_like_profile"),
     path("liked_images/", liked_images, name="liked_images"),
     path("private_images/", private_images, name="private_images"),
+    path("detailed_image/<int:id>", detailed_image, name="detailed_image"),
+    path('download_image/<int:id>/', download_image, name='download_image'),
 ]
  
