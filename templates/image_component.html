@@ -1,7 +1,14 @@
+<script>
+    function login() {
+        var url = `/gallery/login/`;
+        window.location.href = url;
+    }
+</script>
+
 <div class="col-12 col-sm-6">
     <div class="card mt-4 mb-3">
         <div>
-        <img src="{{image.image.url}}" class="card-img-top" alt="Image">
+        <img src="{{image.image.url}}" ondblclick="login()" class="card-img-top" alt="Image">
         </div>
         <div class="card-body">
             <a href="{% url 'login' %}"><img src="/media/background_images/empty_heart.png" style="height: 20px; width: 20px; margin-right: 5px;"></a>

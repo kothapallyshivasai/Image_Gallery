@@ -15,7 +15,13 @@
             <div class="card-body">
                 <div class="row">
                     {% for image in objects %}
-                        {% include "user/user_image_component.html" with image=image %}
+                        <div class="col-12 col-sm-6">
+                            <div class="card mt-4 mb-3">
+                                <div>
+                                    <img src="{{ image.image.url }}" class="card-img-top" alt="Image">
+                                </div>
+                            </div>                          
+                        </div>
                     {% endfor %}
                 </div>
             </div>

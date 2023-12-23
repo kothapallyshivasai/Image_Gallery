@@ -287,8 +287,6 @@ def add_comment(request, image_id):
             comment_object.image_id = Image.objects.get(pk=image_id)
             comment_object.user = request.user
             comment_object.comment = comment
-            print("Comment:", comment_object.comment)
-            print("Comment:", comment)
             comment_object.save()
         except Exception as e:
             print(e)
